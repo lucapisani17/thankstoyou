@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, redirect
+from flask import Flask, request, jsonify, render_template, redirect, send_from_directory
 import sqlite3
 import os
 
@@ -67,6 +67,9 @@ def add():
     print(f"[DB] Salvato: {nome} → {messaggio}")  # log
     return redirect("/admin")  # <-- questo è il return corretto
 
+@app.route('/static/<filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
     
 if __name__ == "__main__":
     print(">>> Avvio server Flask...")
