@@ -6,189 +6,250 @@
   <title>Messaggi Personalizzati</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* La tua immagine di sfondo */
       background-image: url('/static/sfondo.jpeg');
-      background-size: 80%;
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
     }
     
-    /* Overlay leggero per migliorare la leggibilità */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.15);
-      z-index: -1;
+    /* Header con spazio per lo sfondo */
+    .header-space {
+      height: 25vh;
+      min-height: 150px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 20px;
     }
     
-    .container {
-      background: rgba(255, 255, 255, 0.85);
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.2);
+    .title {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px 30px;
+      border-radius: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      backdrop-filter: blur(10px);
       text-align: center;
-      width: 85%;
-      max-width: 350px;
-      transition: transform 0.3s;
-      backdrop-filter: blur(8px);
     }
     
-    .container:hover { 
-      transform: scale(1.02); 
-    }
-    
-    h1 {
-      margin-bottom: 20px;
+    .title h1 {
       color: #333;
+      font-size: 24px;
       font-weight: 600;
+      margin: 0;
+    }
+    
+    /* Container centrale compatto */
+    .main-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .form-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 350px;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
     input[type="text"] {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
       width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
       margin-bottom: 15px;
-      box-sizing: border-box;
+      transition: border-color 0.3s;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6c63ff;
     }
     
     button {
-      padding: 10px 18px;
-      font-size: 15px;
-      border-radius: 8px;
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
       border: none;
-      background: #6c63ff;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6c63ff, #5a52d5);
       color: white;
       cursor: pointer;
-      width: 100%;
-      transition: background 0.3s, transform 0.2s;
-      margin-top: 8px;
-      box-sizing: border-box;
-      font-weight: 500;
+      transition: all 0.3s;
+      font-weight: 600;
+      margin-bottom: 10px;
     }
     
-    button:hover { 
-      background: #574fd6; 
-      transform: scale(1.02); 
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
     }
     
-    .footer { 
-      margin-top: 15px; 
-      font-size: 14px; 
-      color: #555; 
-    }
-    
-    #elencoNomi { 
-      margin-top: 15px; 
-      opacity: 0; 
-      max-height: 0; 
-      overflow: hidden; 
-      transition: all 0.4s ease; 
-    }
-    
-    #elencoNomi.visible { 
-      opacity: 1; 
-      max-height: 500px; 
-    }
-    
-    #elencoNomi ul { 
-      padding-left: 20px; 
-      text-align: left; 
-      margin: 10px 0; 
-    }
-    
-    #elencoNomi li { 
-      margin: 5px 0; 
-      padding: 5px; 
-      background: rgba(108, 99, 255, 0.1); 
-      border-radius: 5px; 
-    }
-    
-    .loading { 
-      color: #6c63ff; 
-      font-style: italic; 
-    }
-    
-    .error { 
-      color: #ff4444; 
-      font-weight: 600; 
+    button:active {
+      transform: translateY(0);
     }
     
     #risultato {
-      margin-top: 15px;
+      margin: 15px 0;
+      padding: 10px;
+      border-radius: 8px;
+      min-height: 20px;
     }
     
-    /* Ottimizzazione per mobile */
-    @media (max-width: 480px) {
-      body {
-        background-size: 90%;
-        padding: 10px;
+    #elencoNomi {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+    
+    #elencoNomi.visible {
+      opacity: 1;
+      max-height: 300px;
+    }
+    
+    #elencoNomi ul {
+      background: rgba(108, 99, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      list-style-position: inside;
+    }
+    
+    #elencoNomi li {
+      margin: 8px 0;
+      padding: 5px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 5px;
+    }
+    
+    .loading {
+      color: #6c63ff;
+      font-style: italic;
+      text-align: center;
+    }
+    
+    .error {
+      color: #ff4444;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    /* Footer con spazio per lo sfondo */
+    .footer-space {
+      height: 20vh;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .footer {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 12px 25px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #666;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-space {
+        height: 20vh;
+        min-height: 120px;
       }
       
-      .container {
-        width: 90%;
+      .footer-space {
+        height: 15vh;
+        min-height: 80px;
+      }
+      
+      .title h1 {
+        font-size: 20px;
+      }
+      
+      .form-container {
         padding: 20px;
-        max-width: 320px;
-      }
-      
-      h1 {
-        font-size: 22px;
-        margin-bottom: 15px;
-      }
-      
-      input[type="text"] {
-        padding: 12px;
-        font-size: 16px;
-      }
-      
-      button {
-        padding: 12px;
-        font-size: 16px;
+        margin: 0 10px;
       }
       
       .footer {
         font-size: 13px;
+        padding: 10px 20px;
       }
     }
     
-    /* Ottimizzazione per tablet */
-    @media (min-width: 481px) and (max-width: 768px) {
-      body {
-        background-size: 85%;
+    @media (max-width: 480px) {
+      .header-space {
+        height: 18vh;
+        min-height: 100px;
       }
       
-      .container {
-        max-width: 380px;
+      .title {
+        padding: 12px 20px;
+        margin: 0 10px;
+      }
+      
+      .title h1 {
+        font-size: 18px;
+      }
+      
+      .form-container {
+        max-width: none;
+        margin: 0 5px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Inserisci il tuo nome</h1>
-    <input type="text" id="nome" placeholder="Es. Marco" required>
-    <button id="btnMessaggio">Mostra il messaggio</button>
-
-    <div id="risultato"></div>
-
-    <button id="mostraElenco" type="button">Elenco ringraziati</button>
-    <div id="elencoNomi"></div>
-
-    <div class="footer">💌 Divertiti a scoprire il tuo messaggio personalizzato!</div>
+  <!-- Header con titolo che lascia vedere lo sfondo -->
+  <div class="header-space">
+    <div class="title">
+      <h1>✨ Messaggi Personalizzati ✨</h1>
+    </div>
+  </div>
+  
+  <!-- Container principale compatto al centro -->
+  <div class="main-container">
+    <div class="form-container">
+      <input type="text" id="nome" placeholder="Inserisci il tuo nome..." required>
+      <button id="btnMessaggio">🔍 Mostra il messaggio</button>
+      
+      <div id="risultato"></div>
+      
+      <button id="mostraElenco" type="button">📋 Elenco ringraziati</button>
+      <div id="elencoNomi"></div>
+    </div>
+  </div>
+  
+  <!-- Footer che lascia vedere lo sfondo -->
+  <div class="footer-space">
+    <div class="footer">
+      💌 Divertiti a scoprire il tuo messaggio personalizzato!
+    </div>
   </div>
 
 <script>
@@ -238,11 +299,18 @@ btnElenco.addEventListener("click", async () => {
       divElenco.innerHTML = `<div class="error">Errore: ${err.message}</div>`;
     }
     elencoVisibile = true;
-    btnElenco.textContent = "Nascondi elenco";
+    btnElenco.textContent = "🙈 Nascondi elenco";
   } else {
     divElenco.classList.remove("visible");
-    btnElenco.textContent = "Elenco ringraziati";
+    btnElenco.textContent = "📋 Elenco ringraziati";
     elencoVisibile = false;
+  }
+});
+
+// Enter key support
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    btnMessaggio.click();
   }
 });
 </script>
