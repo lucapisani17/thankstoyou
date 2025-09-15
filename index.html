@@ -53,21 +53,15 @@
     }
     
     @keyframes float {
-      0% {
-        transform: translateY(100vh) translateX(0px) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.8;
-      }
-      90% {
-        opacity: 0.6;
-      }
-      100% {
-        transform: translateY(-100px) translateX(calc(50px * var(--direction))) rotate(360deg);
-        opacity: 0;
-      }
-    }
+  0% {
+    transform: translateY(0) translateX(0px) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(calc(-80vh - 100px)) translateX(calc(100px * var(--direction))) rotate(360deg);
+    opacity: 0;
+  }
+}
     
     /* Header con spazio per le particelle */
     .header-space {
@@ -90,6 +84,31 @@
       text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
+
+        /* Logo */
+/* Logo */
+.logo-container {
+  position: fixed; /* Cambiato da absolute a fixed */
+  top: 15px; /* Posizionato in alto fisso */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100; /* Aumentato z-index per stare sopra tutto */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+.logo {
+  height: 180px; /* Aumentato da 140px a 180px */
+  width: auto;
+  max-width: 350px; /* Aumentato da 280px a 350px */
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+}
     
     .title h1 {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -283,9 +302,16 @@
     /* Responsive */
     @media (max-width: 768px) {
       .header-space {
-        height: 20vh;
-        min-height: 120px;
-      }
+  height: 25vh; /* Ripristinato valore originale */
+  min-height: 150px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  z-index: 10;
+  margin-top: 80px; /* Aggiunto margine superiore per fare spazio al logo */
+}
       
       .footer-space {
         height: 15vh;
@@ -323,6 +349,19 @@
         padding: 20px;
       }
     }
+@media (max-width: 768px) {
+  .logo {
+    height: 130px; /* Aumentato da 100px a 130px */
+    max-width: 250px; /* Aumentato da 200px a 250px */
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    height: 100px; /* Aumentato da 80px a 100px */
+    max-width: 200px; /* Aumentato da 160px a 200px */
+  }
+}
   </style>
 </head>
 <body>
@@ -332,10 +371,13 @@
   <!-- Header -->
   <div class="header-space">
     <div class="title">
-      <h1>✨ Messaggi Personalizzati ✨</h1>
+      <h1>✨ Ringraziamenti! ✨</h1>
     </div>
   </div>
-  
+  <!-- Logo -->
+<div class="logo-container">
+  <img src="/static/logo.png" alt="Logo" class="logo">
+</div>
   <!-- Container principale -->
   <div class="main-container">
     <div class="form-container" id="formContainer">
@@ -351,9 +393,9 @@
   
   <!-- Footer -->
   <div class="footer-space">
-    <div class="footer">
+    <!--<div class="footer">
       💌 Divertiti a scoprire il tuo messaggio personalizzato!
-    </div>
+    </div>-->
   </div>
 
 <script>
@@ -372,17 +414,18 @@ function createParticle() {
   const particle = document.createElement('div');
   particle.className = 'particle';
 
-  particle.style.opacity = Math.random() * 0.2 + 0.8; // 0.8 - 1.0
+  particle.style.opacity = Math.random() * 0.2 + 0.8;
   particle.style.imageRendering = 'high-quality';
-
   
   // Dimensioni casuali
-  const size = Math.random() * 30 + 15; // 15px - 45px
+  const size = Math.random() * 70 + 30; // 30px - 100px
   particle.style.width = size + 'px';
   particle.style.height = size + 'px';
   
-  // Posizione orizzontale casuale
+  // Posizione orizzontale casuale MA SOLO NELLA PARTE BASSA
+  // Le particelle partono dal basso (80% in giù della pagina)
   particle.style.left = Math.random() * 100 + '%';
+  particle.style.top = (80 + Math.random() * 20) + 'vh'; // 80-100vh (solo parte bassa)
   
   // Durata animazione casuale
   const duration = Math.random() * 10 + 15; // 15-25s
@@ -394,17 +437,6 @@ function createParticle() {
   // Direzione casuale (sinistra o destra)
   const direction = Math.random() > 0.5 ? 1 : -1;
   particle.style.setProperty('--direction', direction);
-  
-  // Colore casuale con tonalità pastello
-  const colors = [
-    'rgba(255, 182, 193, 0.8)', // Rosa chiaro
-    'rgba(173, 216, 230, 0.8)', // Azzurro
-    'rgba(240, 230, 140, 0.8)', // Giallo chiaro
-    'rgba(152, 251, 152, 0.8)', // Verde chiaro
-    'rgba(221, 160, 221, 0.8)'  // Prugna
-  ];
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  particle.style.backgroundColor = randomColor;
   
   document.getElementById('particles').appendChild(particle);
   
