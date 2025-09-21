@@ -32,6 +32,45 @@ def home():
 def admin():
     return render_template("admin.html")
 
+@app.route("/admin/all", methods=["GET"])
+def get_all_messages():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT nome, messaggio FROM utenti ORDER BY nome")
+    messages = [{"nome": row["nome"], "messaggio": row["messaggio"]} for row in cur.fetchall()]
+    conn.close()
+    return jsonify(messages)
+
+@app.route("/admin/delete", methods=["POST"])
+def delete_message():
+    data = request.get_json()
+    nome = data.get("nome", "").strip()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM utenti WHERE nome = ?", (nome,))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
+@app.route("/admin/update", methods=["POST"])
+def update_message():
+    data = request.get_json()
+    old_nome = data.get("old_nome", "").strip()
+    new_nome = data.get("new_nome", "").strip()
+    new_messaggio = data.get("new_messaggio", "").strip()
+    
+    conn = get_db()
+    cur = conn.cursor()
+    
+    # Se il nome è cambiato, elimina il vecchio e crea il nuovo
+    if old_nome != new_nome:
+        cur.execute("DELETE FROM utenti WHERE nome = ?", (old_nome,))
+    
+    cur.execute("INSERT OR REPLACE INTO utenti (nome, messaggio) VALUES (?, ?)", (new_nome, new_messaggio))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
 @app.route("/cerca", methods=["POST"])
 def cerca():
     data = request.get_json()
@@ -64,8 +103,8 @@ def add():
     cur.execute("INSERT OR REPLACE INTO utenti (nome, messaggio) VALUES (?, ?)", (nome, messaggio))
     conn.commit()
     conn.close()
-    print(f"[DB] Salvato: {nome} → {messaggio}")  # log
-    return redirect("/admin")  # <-- questo è il return corretto
+    print(f"[DB] Salvato: {nome} → {messaggio}")
+    return jsonify({"success": True})  # Cambia questo
 
 @app.route('/static/<filename>')
 def static_files(filename):
