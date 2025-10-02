@@ -162,7 +162,7 @@ def cerca():
 def nomi():
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT nome FROM utenti")
+    cur.execute("SELECT nome FROM utenti ORDER BY rowid")
     nomi = [row["nome"] for row in cur.fetchall()]
     conn.close()
     return jsonify(nomi)
